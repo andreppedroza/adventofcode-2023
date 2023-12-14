@@ -1,4 +1,3 @@
-const input = `
 Game 1: 18 red, 8 green, 7 blue; 15 red, 4 blue, 1 green; 2 green, 17 red, 6 blue; 5 green, 1 blue, 11 red; 18 red, 1 green, 14 blue; 8 blue
 Game 2: 16 blue, 12 green, 3 red; 13 blue, 2 red, 8 green; 15 green, 3 red, 16 blue
 Game 3: 6 green, 15 red; 1 green, 4 red, 7 blue; 9 blue, 7 red, 8 green
@@ -99,27 +98,3 @@ Game 97: 3 red, 1 green, 1 blue; 1 green, 3 red; 4 red, 1 green
 Game 98: 4 red, 5 green, 6 blue; 2 red, 9 green, 6 blue; 2 blue, 11 red, 14 green; 6 green, 4 blue; 11 blue, 11 red, 8 green
 Game 99: 2 green, 20 blue; 12 blue; 3 red, 12 blue; 7 blue; 3 green, 10 blue, 2 red; 3 red, 2 green
 Game 100: 2 blue, 8 green, 12 red; 2 green, 13 red; 2 red, 4 green; 2 green, 7 red; 10 green, 5 red, 1 blue
-`
-
-const cubes = {
-  red: 12,
-  green: 13,
-  blue: 14
-}
-
-const createRegex = color => new RegExp(`(\\d+) ${color}`, "g")
-const getColorSets = (game, color) => [...game.matchAll(createRegex(color))].map(m => +m[1])
-const isColorPossible = (game, color) => getColorSets(game, color).every(v => cubes[color] >= v)
-const minimumSetForColor = (game, color) => getColorSets(game, color).sort((a,b) => b - a)[0]
-const getGameId = game => +[...game.matchAll(/Game (\d+):/g)][0][1]
-//Return the game id if is a possible game or 0 if is not
-const returnGameId = game => Object.keys(cubes).every(k => isColorPossible(game, k)) ? getGameId(game) : 0
-const returnGamePower = game => Object.keys(cubes).map(k => minimumSetForColor(game, k)).reduce((p,c) => p * c, 1)
-
-const games = input.trim().split("\n")
-//Part 01
-// const result = games.reduce((p,c) => p + returnGameId(c), 0)
-//Part 02
-const result = games.reduce((p,c) => p + returnGamePower(c), 0)
-
-console.log(result)
