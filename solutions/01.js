@@ -5,7 +5,7 @@ const input = fs.readFileSync(path.join(__dirname, "../inputs/01.txt"), "utf8")
 
 const lines = input.trim().split("\n")
 const numbers = [
-  "zero",
+  "\\d",
   "one",
   "two",
   "three",
@@ -29,14 +29,15 @@ const joins = {
 
 
 const result = lines.map(line => {
-  line = line.replaceAll(/oneight|twone|threeight|fiveight|eightwo|eighthree|nineight/g, v => joins[v])
   // Part 01
   // let digits = [...line.matchAll(/\d/g)].map(d => d[0])
   // Part 02
-  let digits = [...line.matchAll(/\d|one|two|three|four|five|six|seven|eight|nine/g)].map(d => d[0])
+  line = line.replaceAll(new RegExp(Object.keys(joins).join("|"), "g"), v => joins[v])
+  let digits = [...line.matchAll(new RegExp(numbers.join("|"), "g"))].map(d => d[0])
+
   digits = digits.map(d => {
     const index = numbers.indexOf(d)
-    return index >= 0 ? index + "" : d
+    return index > 0 ? index + "" : d
   })
   const num = +(digits.at(0) + digits.at(-1))
   return num
